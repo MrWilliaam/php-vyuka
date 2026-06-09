@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formuláře v PHP - Teorie</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #1a1a2e;
+            color: #eee;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .slide {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 60px 80px;
+            text-align: center;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        .slide h1 {
+            font-size: 3.2em;
+            color: #e94560;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .slide h2 {
+            font-size: 2.4em;
+            color: #e94560;
+            margin-bottom: 30px;
+        }
+
+        .slide h3 {
+            font-size: 1.6em;
+            color: #0f3460;
+            margin: 20px 0 10px;
+        }
+
+        .slide p, .slide li {
+            font-size: 1.35em;
+            line-height: 1.7;
+            color: #ddd;
+        }
+
+        .slide ul, .slide ol {
+            text-align: left;
+            display: inline-block;
+            margin-top: 20px;
+        }
+
+        .slide li {
+            margin: 10px 0;
+        }
+
+        .slide code {
+            background: #16213e;
+            color: #0ff;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 0.95em;
+            font-family: 'Fira Code', 'Consolas', monospace;
+        }
+
+        .slide pre {
+            background: #16213e;
+            color: #f8f8f2;
+            padding: 24px 32px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            line-height: 1.6;
+            text-align: left;
+            margin: 20px auto;
+            max-width: 850px;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            overflow-x: auto;
+        }
+
+        .slide pre .kw { color: #e94560; }
+        .slide pre .str { color: #7ec8e3; }
+        .slide pre .var { color: #0ff; }
+        .slide pre .cmt { color: #666; font-style: italic; }
+        .slide pre .fn { color: #ffd700; }
+
+        .subtitle {
+            font-size: 1.5em;
+            color: #999;
+            margin-top: 10px;
+        }
+
+        .diagram {
+            background: #16213e;
+            border-radius: 12px;
+            padding: 30px 40px;
+            margin: 20px auto;
+            max-width: 800px;
+            text-align: center;
+        }
+
+        .diagram .step {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 12px 0;
+            font-size: 1.2em;
+        }
+
+        .diagram .box {
+            background: #0f3460;
+            padding: 10px 20px;
+            border-radius: 8px;
+            color: #fff;
+            min-width: 180px;
+        }
+
+        .diagram .box.browser { background: #e94560; }
+        .diagram .box.server { background: #0f3460; }
+        .diagram .arrow { color: #ffd700; font-size: 1.5em; }
+
+        .two-cols {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            width: 100%;
+            max-width: 900px;
+            margin: 20px auto;
+            text-align: left;
+        }
+
+        .col {
+            background: #16213e;
+            padding: 24px;
+            border-radius: 10px;
+        }
+
+        .col h3 {
+            color: #e94560;
+            margin-bottom: 12px;
+            font-size: 1.3em;
+        }
+
+        .col p, .col li {
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .highlight {
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .danger {
+            color: #e94560;
+            font-weight: bold;
+        }
+
+        .ok {
+            color: #4caf50;
+            font-weight: bold;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin: 4px;
+        }
+
+        .tag-get { background: #0f3460; color: #7ec8e3; }
+        .tag-post { background: #4a0e23; color: #e94560; }
+
+        .nav {
+            position: fixed;
+            bottom: 20px;
+            right: 30px;
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .nav button {
+            background: #0f3460;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.1em;
+        }
+
+        .nav button:hover { background: #e94560; }
+
+        .progress {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            background: #e94560;
+            transition: width 0.3s;
+        }
+
+        .slide-num {
+            position: fixed;
+            bottom: 25px;
+            left: 30px;
+            color: #555;
+            font-size: 1em;
+        }
+
+        .flow-horizontal {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin: 25px auto;
+            flex-wrap: wrap;
+        }
+
+        .flow-box {
+            background: #0f3460;
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-size: 1.1em;
+        }
+
+        .flow-box.err { background: #7a1a2e; }
+        .flow-box.ok { background: #1b5e20; }
+
+        .flow-arrow { color: #ffd700; font-size: 1.8em; }
+
+        .warning-box {
+            background: #4a0e23;
+            border: 2px solid #e94560;
+            border-radius: 10px;
+            padding: 20px 30px;
+            margin: 20px auto;
+            max-width: 800px;
+            text-align: left;
+        }
+
+        .warning-box p {
+            font-size: 1.15em;
+        }
+
+        .input-types {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            max-width: 800px;
+            margin: 20px auto;
+            text-align: left;
+        }
+
+        .input-type {
+            background: #16213e;
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-size: 1.05em;
+        }
+
+        .input-type code {
+            font-size: 0.85em;
+        }
+
+        .lifecycle {
+            text-align: left;
+            max-width: 750px;
+            margin: 20px auto;
+        }
+
+        .lifecycle .lc-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin: 14px 0;
+        }
+
+        .lifecycle .lc-num {
+            background: #e94560;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1em;
+            flex-shrink: 0;
+        }
+
+        .lifecycle .lc-text {
+            font-size: 1.15em;
+            line-height: 1.5;
+            padding-top: 4px;
+        }
+
+        .lifecycle .lc-branch {
+            margin-left: 51px;
+            padding: 6px 0;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+
+<!-- SLIDE 1: Titulní -->
+<div class="slide active" id="s1">
+    <h1>Formuláře v PHP</h1>
+    <p class="subtitle">Co potřebujete vědět, než začneme programovat</p>
+    <p style="margin-top: 40px; color: #555; font-size: 1.1em;">Lekce 9 &amp; 10 - Teoretický úvod</p>
+</div>
+
+<!-- SLIDE 2: HTTP -->
+<div class="slide" id="s2">
+    <h2>Jak funguje web?</h2>
+    <p style="margin-bottom: 20px;">Každá interakce na webu = výměna zpráv přes <span class="highlight">HTTP protokol</span></p>
+    <div class="diagram">
+        <div class="step">
+            <div class="box browser">Prohlížeč</div>
+            <div class="arrow">&xrarr; požadavek (request) &xrarr;</div>
+            <div class="box server">Server + PHP</div>
+        </div>
+        <div class="step">
+            <div class="box browser">Prohlížeč</div>
+            <div class="arrow">&xlarr; odpověď (response) &xlarr;</div>
+            <div class="box server">Server + PHP</div>
+        </div>
+    </div>
+    <ul>
+        <li>Prohlížeč pošle <strong>požadavek</strong> (chci stránku X)</li>
+        <li>Server spustí PHP, vygeneruje HTML a pošle <strong>odpověď</strong></li>
+        <li>Prohlížeč odpověď zobrazí</li>
+    </ul>
+</div>
+
+<!-- SLIDE 3: GET vs POST -->
+<div class="slide" id="s3">
+    <h2>GET vs POST</h2>
+    <p style="margin-bottom: 15px;">Dvě základní <span class="highlight">metody</span> HTTP požadavku</p>
+    <div class="two-cols">
+        <div class="col">
+            <h3><span class="tag tag-get">GET</span></h3>
+            <p>Data jsou <strong>v URL</strong></p>
+            <p><code>stranka.php?jmeno=Jan&vek=17</code></p>
+            <ul>
+                <li>Viditelná v adresním řádku</li>
+                <li>Omezená délka (~2000 znaků)</li>
+                <li>Pro <strong>čtení</strong> dat (vyhledávání, filtrování)</li>
+                <li>Lze uložit do záložek</li>
+            </ul>
+        </div>
+        <div class="col">
+            <h3><span class="tag tag-post">POST</span></h3>
+            <p>Data jsou <strong>v těle požadavku</strong></p>
+            <p><code>stranka.php</code> (data nevidíte)</p>
+            <ul>
+                <li>Neviditelná v URL</li>
+                <li>Bez limitu velikosti</li>
+                <li>Pro <strong>odesílání</strong> dat (formuláře, přihlášení)</li>
+                <li>Nelze uložit do záložek</li>
+            </ul>
+        </div>
+    </div>
+    <p style="margin-top: 15px; color: #999;">Tip: v DevTools (F12 &rarr; Network) si můžete prohlédnout oba typy požadavků</p>
+</div>
+
+<!-- SLIDE 4: PHP na serveru -->
+<div class="slide" id="s4">
+    <h2>PHP běží na serveru</h2>
+    <p style="margin-bottom: 10px;">PHP kód <span class="danger">nikdy neběží</span> v prohlížeči</p>
+    <div class="flow-horizontal">
+        <div class="flow-box">Požadavek přijde</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-box">PHP se spustí od začátku</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-box">Vygeneruje HTML</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-box">Odešle odpověď</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-box err">PHP skončí!</div>
+    </div>
+    <div class="warning-box">
+        <p><span class="danger">Klíčový fakt:</span> Každý požadavek = PHP se spustí úplně znovu.</p>
+        <p style="margin-top: 8px;">Proměnné z předchozího požadavku <strong>neexistují</strong>.</p>
+        <p style="margin-top: 8px;">Proto potřebujeme speciální způsoby, jak data mezi požadavky přenést
+        (<code>$_POST</code>, <code>$_GET</code>, <code>$_SESSION</code>).</p>
+    </div>
+</div>
+
+<!-- SLIDE 5: Superglobální proměnné -->
+<div class="slide" id="s5">
+    <h2>Superglobální proměnné</h2>
+    <p style="margin-bottom: 15px;">Speciální pole, která PHP automaticky naplní daty z požadavku</p>
+    <pre><span class="var">$_GET</span>      <span class="cmt">// data z URL parametrů (?klíč=hodnota)</span>
+<span class="var">$_POST</span>     <span class="cmt">// data z formuláře odeslaného metodou POST</span>
+<span class="var">$_SERVER</span>   <span class="cmt">// informace o požadavku (metoda, URL, ...)</span>
+<span class="var">$_SESSION</span>  <span class="cmt">// data uložená na serveru mezi požadavky</span></pre>
+    <p style="margin-top: 20px;">Jsou to <span class="highlight">asociativní pole</span> &mdash; klíče odpovídají atributu <code>name</code> v HTML</p>
+    <pre><span class="cmt">&lt;!-- HTML --&gt;</span>
+&lt;input <span class="str">name="jmeno"</span> value="Jan"&gt;
+
+<span class="cmt">// PHP po odeslání formuláře:</span>
+<span class="fn">echo</span> <span class="var">$_POST</span>[<span class="str">'jmeno'</span>]; <span class="cmt">// "Jan"</span></pre>
+</div>
+
+<!-- SLIDE 6: HTML formulář -->
+<div class="slide" id="s6">
+    <h2>HTML formulář</h2>
+    <p style="margin-bottom: 15px;">Základní struktura</p>
+    <pre>&lt;form <span class="str">method="POST"</span> <span class="str">action=""</span>&gt;
+
+    &lt;label <span class="str">for="jmeno"</span>&gt;Jméno:&lt;/label&gt;
+    &lt;input <span class="str">type="text"</span> <span class="str">id="jmeno"</span> <span class="str">name="jmeno"</span>&gt;
+
+    &lt;button <span class="str">type="submit"</span>&gt;Odeslat&lt;/button&gt;
+
+&lt;/form&gt;</pre>
+    <ul>
+        <li><code>method</code> &mdash; GET nebo POST</li>
+        <li><code>action=""</code> &mdash; kam se data odešlou (prázdné = na sebe)</li>
+        <li><code>name</code> &mdash; klíč v <code>$_POST</code> / <code>$_GET</code></li>
+    </ul>
+</div>
+
+<!-- SLIDE 7: Typy inputů -->
+<div class="slide" id="s7">
+    <h2>Typy vstupních polí</h2>
+    <div class="input-types">
+        <div class="input-type"><code>type="text"</code> &mdash; obyčejný text</div>
+        <div class="input-type"><code>type="email"</code> &mdash; email (kontrola formátu)</div>
+        <div class="input-type"><code>type="number"</code> &mdash; číslo (min/max)</div>
+        <div class="input-type"><code>type="date"</code> &mdash; výběr data</div>
+        <div class="input-type"><code>type="radio"</code> &mdash; výběr jedné možnosti</div>
+        <div class="input-type"><code>type="checkbox"</code> &mdash; zaškrtávátko (více možností)</div>
+        <div class="input-type"><code>&lt;select&gt;</code> &mdash; rozbalovací seznam</div>
+        <div class="input-type"><code>&lt;textarea&gt;</code> &mdash; víceřádkový text</div>
+    </div>
+    <pre><span class="cmt">// Radio - stejný name = jen jedna volba</span>
+&lt;input <span class="str">type="radio" name="pohlavi" value="muz"</span>&gt; Muž
+&lt;input <span class="str">type="radio" name="pohlavi" value="zena"</span>&gt; Žena
+
+<span class="cmt">// Checkbox - [] = pole hodnot</span>
+&lt;input <span class="str">type="checkbox" name="jazyky[]" value="PHP"</span>&gt; PHP
+&lt;input <span class="str">type="checkbox" name="jazyky[]" value="JS"</span>&gt; JS</pre>
+</div>
+
+<!-- SLIDE 8: Zpracování v PHP -->
+<div class="slide" id="s8">
+    <h2>Zpracování formuláře v PHP</h2>
+    <pre><span class="kw">if</span> (<span class="var">$_SERVER</span>[<span class="str">'REQUEST_METHOD'</span>] === <span class="str">'POST'</span>) {
+
+    <span class="cmt">// 1. Čtení a čištění dat</span>
+    <span class="var">$jmeno</span> = <span class="fn">trim</span>(<span class="var">$_POST</span>[<span class="str">'jmeno'</span>] ?? <span class="str">''</span>);
+    <span class="var">$email</span>  = <span class="fn">trim</span>(<span class="var">$_POST</span>[<span class="str">'email'</span>] ?? <span class="str">''</span>);
+
+    <span class="cmt">// 2. Validace</span>
+    <span class="kw">if</span> (<span class="var">$jmeno</span> === <span class="str">''</span>) {
+        <span class="var">$chyby</span>[] = <span class="str">'Jméno je povinné.'</span>;
+    }
+
+    <span class="cmt">// 3. Pokud OK → uložit / zobrazit</span>
+    <span class="kw">if</span> (<span class="fn">empty</span>(<span class="var">$chyby</span>)) {
+        <span class="cmt">// uložit data...</span>
+    }
+}</pre>
+    <ul>
+        <li><code>??&nbsp;''</code> &mdash; výchozí hodnota, pokud klíč neexistuje</li>
+        <li><code>trim()</code> &mdash; odstraní mezery na začátku a konci</li>
+    </ul>
+</div>
+
+<!-- SLIDE 9: Bezpečnost - XSS -->
+<div class="slide" id="s9">
+    <h2>Bezpečnost: XSS útok</h2>
+    <p style="margin-bottom: 15px;">Co když uživatel do formuláře napíše tohle?</p>
+    <pre><span class="danger">&lt;script&gt;alert('Hack!')&lt;/script&gt;</span></pre>
+    <p style="margin: 15px 0;">Bez ochrany prohlížeč spustí ten JavaScript!</p>
+    <div class="two-cols">
+        <div class="col" style="border: 2px solid #e94560;">
+            <h3 style="color: #e94560;">Špatně</h3>
+            <pre style="margin: 10px 0; font-size: 0.95em;"><span class="fn">echo</span> <span class="var">$_POST</span>[<span class="str">'jmeno'</span>];</pre>
+            <p>Výstup se vloží přímo do HTML</p>
+        </div>
+        <div class="col" style="border: 2px solid #4caf50;">
+            <h3 style="color: #4caf50;">Správně</h3>
+            <pre style="margin: 10px 0; font-size: 0.95em;"><span class="fn">echo</span> <span class="fn">htmlspecialchars</span>(<span class="var">$jmeno</span>);</pre>
+            <p>Převede <code>&lt;</code> na <code>&amp;lt;</code> atd.</p>
+        </div>
+    </div>
+    <p style="margin-top: 15px;"><span class="highlight">Pravidlo:</span> Vždy <code>htmlspecialchars()</code> při <strong>výpisu</strong> uživatelských dat</p>
+</div>
+
+<!-- SLIDE 10: Bezpečnost - validace -->
+<div class="slide" id="s10">
+    <h2>Bezpečnost: Validace na serveru</h2>
+    <p style="margin-bottom: 15px;">HTML validace (<code>required</code>, <code>type="email"</code>) <span class="danger">nestačí!</span></p>
+    <div class="warning-box">
+        <p>Uživatel může:</p>
+        <ul style="margin: 10px 0 0 20px;">
+            <li>Otevřít DevTools a smazat atribut <code>required</code></li>
+            <li>Poslat požadavek přes curl/Postman bez prohlížeče</li>
+            <li>Změnit hodnoty selectu/radia na cokoliv</li>
+        </ul>
+    </div>
+    <pre><span class="cmt">// Whitelist validace - ověřit, že hodnota je z povolených</span>
+<span class="var">$povoleneTridy</span> = [<span class="str">'1.A'</span>, <span class="str">'2.A'</span>, <span class="str">'3.A'</span>, <span class="str">'4.A'</span>];
+
+<span class="kw">if</span> (!<span class="fn">in_array</span>(<span class="var">$trida</span>, <span class="var">$povoleneTridy</span>, <span class="kw">true</span>)) {
+    <span class="var">$chyby</span>[] = <span class="str">'Neplatná třída.'</span>;
+}</pre>
+    <p style="margin-top: 10px;"><span class="highlight">Pravidlo:</span> HTML validace = pro pohodlí uživatele. PHP validace = pro bezpečnost.</p>
+</div>
+
+<!-- SLIDE 11: Životní cyklus formuláře -->
+<div class="slide" id="s11">
+    <h2>Životní cyklus formuláře</h2>
+    <div class="lifecycle">
+        <div class="lc-step">
+            <div class="lc-num">1</div>
+            <div class="lc-text">Uživatel otevře stránku <span class="tag tag-get">GET</span> &rarr; PHP zobrazí prázdný formulář</div>
+        </div>
+        <div class="lc-step">
+            <div class="lc-num">2</div>
+            <div class="lc-text">Uživatel vyplní formulář a klikne <strong>Odeslat</strong></div>
+        </div>
+        <div class="lc-step">
+            <div class="lc-num">3</div>
+            <div class="lc-text">Prohlížeč pošle data na server <span class="tag tag-post">POST</span></div>
+        </div>
+        <div class="lc-step">
+            <div class="lc-num">4</div>
+            <div class="lc-text">PHP přečte <code>$_POST</code>, validuje data&hellip;</div>
+        </div>
+        <div class="lc-branch">
+            <span class="danger">&rdsh; Chyba</span> &rarr; zobrazí formulář znovu s chybovou hláškou
+        </div>
+        <div class="lc-branch">
+            <span class="ok">&rdsh; OK</span> &rarr; uloží data, <strong>přesměruje</strong> (redirect) &rarr; GET
+        </div>
+        <div class="lc-step">
+            <div class="lc-num">5</div>
+            <div class="lc-text">Prohlížeč následuje přesměrování &rarr; zobrazí výsledek</div>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 12: PRG Pattern -->
+<div class="slide" id="s12">
+    <h2>PRG Pattern</h2>
+    <p style="margin-bottom: 5px;"><span class="highlight">Post / Redirect / Get</span></p>
+    <p style="margin-bottom: 20px; color: #999;">Proč po úspěšném uložení přesměrováváme?</p>
+    <div class="two-cols">
+        <div class="col" style="border: 2px solid #e94560;">
+            <h3 style="color: #e94560;">Bez PRG</h3>
+            <p>Uživatel klikne Odeslat (POST)</p>
+            <p>Data se uloží, zobrazí se výsledek</p>
+            <p>Uživatel zmáčkne <strong>F5 (refresh)</strong></p>
+            <p><span class="danger">&rarr; Prohlížeč odešle POST znovu!</span></p>
+            <p><span class="danger">&rarr; Data se uloží podruhé!</span></p>
+        </div>
+        <div class="col" style="border: 2px solid #4caf50;">
+            <h3 style="color: #4caf50;">S PRG</h3>
+            <p>Uživatel klikne Odeslat (POST)</p>
+            <p>Data se uloží, PHP přesměruje (302)</p>
+            <p>Prohlížeč udělá GET na novou URL</p>
+            <p>Uživatel zmáčkne <strong>F5 (refresh)</strong></p>
+            <p><span class="ok">&rarr; Prohlížeč zopakuje jen GET</span></p>
+        </div>
+    </div>
+    <pre style="max-width: 600px;"><span class="cmt">// Po úspěšném uložení:</span>
+<span class="fn">header</span>(<span class="str">'Location: '</span> . <span class="var">$_SERVER</span>[<span class="str">'REQUEST_URI'</span>]);
+<span class="kw">exit</span>;</pre>
+</div>
+
+<!-- SLIDE 13: Shrnutí -->
+<div class="slide" id="s13">
+    <h2>Shrnutí</h2>
+    <ol style="max-width: 700px;">
+        <li><strong>HTTP</strong> = požadavek &harr; odpověď; <strong>GET</strong> (čtení) vs <strong>POST</strong> (odesílání)</li>
+        <li><strong>PHP běží na serveru</strong>, každý požadavek = nový start</li>
+        <li>Data z formuláře čteme z <code>$_POST</code> / <code>$_GET</code></li>
+        <li>Atribut <code>name</code> = klíč v poli</li>
+        <li><strong>Vždy validovat na serveru</strong> (HTML validace nestačí)</li>
+        <li><code>htmlspecialchars()</code> při <strong>každém výpisu</strong></li>
+        <li><strong>PRG pattern</strong> = po uložení přesměrovat</li>
+    </ol>
+    <p style="margin-top: 40px; font-size: 1.4em; color: #e94560;">A teď si to vyzkoušíme!</p>
+</div>
+
+<!-- NAVIGACE -->
+<div class="nav">
+    <button onclick="prev()" title="Předchozí (← šipka)">&larr; Zpět</button>
+    <button onclick="next()" title="Další (→ šipka)">Dále &rarr;</button>
+</div>
+<div class="progress" id="progress"></div>
+<div class="slide-num" id="slideNum"></div>
+
+<script>
+    const slides = document.querySelectorAll('.slide');
+    let current = 0;
+
+    function show(n) {
+        if (n < 0 || n >= slides.length) return;
+        slides[current].classList.remove('active');
+        current = n;
+        slides[current].classList.add('active');
+        document.getElementById('progress').style.width = ((current + 1) / slides.length * 100) + '%';
+        document.getElementById('slideNum').textContent = (current + 1) + ' / ' + slides.length;
+    }
+
+    function next() { show(current + 1); }
+    function prev() { show(current - 1); }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); next(); }
+        if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+        if (e.key === 'Home') { e.preventDefault(); show(0); }
+        if (e.key === 'End') { e.preventDefault(); show(slides.length - 1); }
+    });
+
+    show(0);
+</script>
+</body>
+</html>

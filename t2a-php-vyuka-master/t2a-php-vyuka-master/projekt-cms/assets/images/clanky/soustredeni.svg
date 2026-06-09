@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" viewBox="0 0 1200 600">
+  <defs>
+    <linearGradient id="g48d5753e" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#78350f"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="600" fill="url(#g48d5753e)"/>
+  <text x="600" y="250" text-anchor="middle" font-size="80">🌞</text>
+  <text x="600" y="320" text-anchor="middle" font-family="system-ui, sans-serif" font-size="16" font-weight="500" fill="rgba(255,255,255,0.5)" letter-spacing="3">ČLÁNEK</text>
+  <text x="600" y="360" text-anchor="middle" font-family="system-ui, sans-serif" font-size="32" font-weight="700" fill="white">Letní soustředění</text>
+</svg>

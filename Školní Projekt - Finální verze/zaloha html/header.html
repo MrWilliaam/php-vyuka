@@ -1,0 +1,36 @@
+<header class="site-header">
+	<div class="container header-inner">
+		<a class="brand" href="index.html" aria-label="Domů">
+			<span class="brand-badge" aria-hidden="true"></span>
+			<span>NEON&nbsp;SHOP</span>
+		</a>
+
+		<form class="searchbar" action="vyhledavani.html" method="get" role="search">
+			<input type="search" name="q" placeholder="Hledat produkty…" aria-label="Hledat produkty">
+		</form>
+
+		<nav class="nav" aria-label="Hlavní menu">
+			<a href="index.html">Home</a>
+			<a href="kategorie.html">Kategorie</a>
+			<a href="produkty.php">Produkty</a>
+			<a href="o-nas.php">O nás</a>
+			<a href="kontakt.html">Kontakt</a>
+		</nav>
+
+		<div class="header-actions">
+			<a class="badge" href="kosik-krok1.html" aria-label="Košík">🛒 2</a>
+			<button class="icon-btn mobile-toggle" type="button" data-mobile-toggle aria-expanded="false" aria-controls="mobilePanel">☰</button>
+		</div>
+	</div>
+
+	<div class="container mobile-panel" id="mobilePanel" data-mobile-panel data-open="false" style="display:none">
+		<nav class="stack" aria-label="Mobilní menu">
+			<a href="index.html">Home</a>
+			<a href="kategorie.html">Kategorie</a>
+			<a href="produkty.php">Produkty</a>
+			<a href="o-nas.php">O nás</a>
+			<a href="kontakt.html">Kontakt</a>
+			<a href="kosik-krok1.html">Košík</a>
+		</nav>
+	</div>
+</header>

@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<title>Zadání projektu – E-shop (2. fáze – Backend)</title>
+<style>
+    @page { margin: 2cm; size: A4; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; line-height: 1.7; color: #1e293b; max-width: 800px; margin: 0 auto; padding: 2rem; }
+    h1 { font-size: 2rem; margin-bottom: 0.25rem; }
+    h2 { font-size: 1.5rem; margin-top: 2.5rem; }
+    h3 { font-size: 1.15rem; margin-top: 1.5rem; }
+    hr { border: none; border-top: 1px solid #e2e8f0; margin: 1.5rem 0; }
+    ul, ol { margin: 0.5rem 0; padding-left: 1.5rem; }
+    li { margin: 0.3rem 0; }
+    code { background: #f1f5f9; padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.9rem; }
+    pre { background: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 8px; overflow-x: auto; font-size: 0.85rem; }
+    pre code { background: transparent; color: inherit; padding: 0; }
+    .meta { color: #64748b; margin-bottom: 0.25rem; }
+    .meta strong { color: #1e293b; }
+    table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+    th, td { padding: 0.5rem 0.75rem; text-align: left; border-bottom: 1px solid #e2e8f0; }
+    th { font-weight: 600; background: #f8fafc; }
+    .tree { font-family: monospace; font-size: 0.9rem; line-height: 1.5; background: #f8fafc; padding: 1rem; border-radius: 8px; }
+    .page-break { page-break-before: always; }
+</style>
+</head>
+<body>
+
+<h1>&#x1F4DD; ZADÁNÍ PROJEKTU – E-SHOP<br>(2. FÁZE – BACKEND)</h1>
+
+<p class="meta"><strong>Předmět:</strong> PRG</p>
+<p class="meta"><strong>Ročník:</strong> 2. ročník</p>
+<p class="meta"><strong>Časová dotace:</strong> cca 8 dvouhodinových bloků + domácí práce</p>
+<p class="meta"><strong>Technologie:</strong> PHP 8.3, SQLite, sessions, prepared statements</p>
+<p class="meta"><strong>Navazuje na:</strong> 1. fázi (HTML/CSS frontend)</p>
+<p class="meta"><strong>Termín odevzdání:</strong> 31. 5. 2026</p>
+
+<hr>
+
+<h2>&#x1F3AF; Cíl projektu</h2>
+
+<p>
+Cílem druhé fáze je oživit statický e-shop z první fáze a proměnit ho v plně funkční webovou aplikaci.
+Propojíte svůj HTML/CSS frontend s PHP backendem a SQLite databází. Naučíte se pracovat s dynamickým
+generováním HTML, formuláři, sessions (košík) a základními principy bezpečnosti webových aplikací.
+</p>
+
+<p>
+K dispozici dostáváte připravený základ – databázi se vzorovými daty, repozitáře pro práci s daty,
+košík uložený v session, validátor formulářů a znovupoužitelné partialy. Vaším úkolem je tyto
+komponenty využít a postavit na nich kompletní e-shop s funkčním nákupním procesem.
+</p>
+
+<p>
+Součástí projektu je i tvorba technické dokumentace a prezentace výsledku před třídou,
+čímž si procvičíte schopnost popsat a obhájit svou práci.
+</p>
+
+<h2>&#x1F6E0; Postup práce</h2>
+
+<ol>
+    <li>
+        <strong>Převod HTML na PHP</strong>
+        <ul>
+            <li>Přejmenování všech <code>.html</code> souborů na <code>.php</code>.</li>
+            <li>Nahrazení ručně kopírovaných hlaviček/patiček za <code>require</code> (partialy).</li>
+            <li>Přidání <code>require_once __DIR__ . '/src/bootstrap.php';</code> na začátek každé stránky.</li>
+        </ul>
+    </li>
+    <li>
+        <strong>Napojení na databázi</strong>
+        <ul>
+            <li>Nahrazení statických dat za dynamická – kategorie, produkty, parametry z databáze.</li>
+            <li>Používání repozitářů (<code>ProductRepository</code>, <code>CategoryRepository</code> atd.).</li>
+        </ul>
+    </li>
+    <li>
+        <strong>Implementace funkcí</strong>
+        <ul>
+            <li>Funkční košík (přidání, odebrání, změna množství, varianty).</li>
+            <li>Objednávkový proces ve 3 krocích (adresa, doprava/platba, shrnutí).</li>
+            <li>Vyhledávání produktů.</li>
+            <li>404 stránka pro neexistující produkty/kategorie.</li>
+        </ul>
+    </li>
+    <li>
+        <strong>Formuláře a validace</strong>
+        <ul>
+            <li>Server-side validace všech formulářů pomocí třídy <code>Validator</code>.</li>
+            <li>Zobrazení chyb uživateli při nevalidním vstupu.</li>
+            <li>Zachování vyplněných hodnot po odeslání formuláře s chybou.</li>
+        </ul>
+    </li>
+    <li>
+        <strong>Rozšíření CSS</strong>
+        <ul>
+            <li>Doplnění stylů pro nové komponenty (kroky košíku, formulářové prvky, chybové hlášky, 404 stránka).</li>
+        </ul>
+    </li>
+    <li>
+        <strong>Testování a kontrola</strong>
+        <ul>
+            <li>Ověření validity HTML (W3C validátor) – i PHP-generované stránky musí být validní.</li>
+            <li>Kontrola funkčnosti na různých scénářích (prázdný košík, neexistující produkt, chybné vstupy).</li>
+        </ul>
+    </li>
+    <li>
+        <strong>Dokumentace</strong>
+        <ul>
+            <li>Sepsání technické zprávy (viz sekce Dokumentace).</li>
+        </ul>
+    </li>
+    <li>
+        <strong>Verzování a odevzdání</strong>
+        <ul>
+            <li>Průběžné commity s výstižným popisem.</li>
+            <li>Finální odevzdání jako Git repozitář.</li>
+        </ul>
+    </li>
+</ol>
+
+<div class="page-break"></div>
+
+<h2>&#x1F4C4; Rozsah projektu – povinné stránky a funkcionality</h2>
+
+<h3>1) Homepage – <code>index.php</code></h3>
+<p>
+Dynamicky načítané doporučené produkty z databáze (<code>getFeatured</code>).
+Přehled kategorií z databáze. Funkční odkazy na kategorie a produkty.
+</p>
+
+<h3>2) Výpis kategorií – <code>kategorie.php</code></h3>
+<p>
+Všechny kategorie načítané z databáze. Každá kategorie jako dlaždice s obrázkem, názvem a popisem.
+Odkaz na výpis produktů v dané kategorii.
+</p>
+
+<h3>3) Produkty v kategorii – <code>produkty.php?slug=...</code></h3>
+<p>
+Dynamický výpis produktů pro zvolenou kategorii. Použití partialu <code>product-card.php</code>.
+Ošetření neexistující kategorie (přesměrování na 404).
+</p>
+
+<h3>4) Detail produktu – <code>produkt.php?slug=...</code></h3>
+<p>
+Hlavní obrázek + galerie dalších obrázků. Název, cena (včetně případné slevy), popis.
+Volitelné parametry (velikost, barva) jako dropdown pro výběr varianty.
+Informační parametry v tabulce. Tlačítko přidání do košíku.
+Ošetření neexistujícího produktu (404).
+</p>
+
+<h3>5) Košík – přehled – <code>kosik.php</code></h3>
+<p>
+Výpis všech položek v košíku včetně vybraných variant.
+Možnost změny množství a odebrání položky.
+Zobrazení mezisoučtové ceny.
+Odkaz na další krok (objednávka) nebo na pokračování v nákupu.
+Ošetření prázdného košíku (informativní hláška s odkazem na produkty).
+</p>
+
+<h3>6) Objednávka – krok 1: Dodací údaje – <code>objednavka-1.php</code></h3>
+<p>
+Formulář: jméno, příjmení, e-mail, telefon, ulice, město, PSČ, poznámka.<br>
+<strong>Server-side validace</strong> pomocí třídy <code>Validator</code>: kontrola neprázdnosti povinných polí,
+formát e-mailu, formát PSČ (5 číslic). Při chybě zobrazit chybovou hlášku a zachovat vyplněné hodnoty.
+Data uložit do session pro další kroky.
+</p>
+
+<h3>7) Objednávka – krok 2: Doprava a platba – <code>objednavka-2.php</code></h3>
+<p>
+Výběr způsobu dopravy z číselníku (<code>ShippingMethodRepository</code>) – zobrazit název, cenu a dobu doručení.
+Výběr způsobu platby z číselníku (<code>PaymentMethodRepository</code>) – zobrazit název a případný poplatek.
+Volba se uloží do session. Validace: oba výběry musí být zvoleny.
+</p>
+
+<h3>8) Objednávka – krok 3: Shrnutí – <code>objednavka-3.php</code></h3>
+<p>
+Přehled celé objednávky: dodací údaje, zvolená doprava a platba, seznam položek s variantami,
+cena za zboží, cena dopravy, poplatek za platbu, celková cena.
+Checkbox pro souhlas s obchodními podmínkami (povinný).
+Tlačítko pro odeslání objednávky.
+</p>
+
+<h3>9) Potvrzení objednávky – <code>objednavka-potvrzeni.php</code></h3>
+<p>
+Uložení zákazníka a objednávky do databáze (<code>CustomerRepository</code>, <code>OrderRepository</code>).
+Vyprázdnění košíku. Zobrazení potvrzení s číslem objednávky a shrnutím.
+Přesměrování přes Post/Redirect/Get.
+</p>
+
+<h3>10) Vyhledávání – <code>vyhledavani.php</code></h3>
+<p>
+Funkční vyhledávání produktů podle názvu a popisu.
+Formulář s vyhledávacím polem (v hlavičce nebo na stránce).
+Zobrazení výsledků pomocí <code>product-card.php</code>.
+Ošetření prázdného dotazu a žádných výsledků.
+</p>
+
+<h3>11) Stránka „O nás" a „Kontakt" – <code>o-nas.php</code>, <code>kontakt.php</code></h3>
+<p>
+Převedení na PHP s partialy. Kontaktní formulář nemusí být funkční (odesílání e-mailů),
+ale musí mít server-side validaci pomocí <code>Validator</code> a zobrazení zprávy „Zpráva byla odeslána".
+</p>
+
+<h3>12) Stránka 404 – <code>404.php</code></h3>
+<p>
+Vlastní stránka pro neexistující produkty, kategorie nebo neplatné URL.
+S navigací (header/footer) a odkazem zpět na hlavní stránku.
+</p>
+
+<div class="page-break"></div>
+
+<h2>&#x1F512; Bezpečnost a best practices</h2>
+
+<p>Dodržení následujících pravidel je <strong>povinné</strong> a bude hodnoceno:</p>
+
+<table>
+<tr>
+    <th>Pravidlo</th>
+    <th>Proč</th>
+</tr>
+<tr>
+    <td><code>htmlspecialchars()</code> u každého výpisu uživatelského nebo databázového obsahu</td>
+    <td>Prevence XSS útoků</td>
+</tr>
+<tr>
+    <td>Prepared statements pro všechny SQL dotazy (již hotové v repozitářích)</td>
+    <td>Prevence SQL injection</td>
+</tr>
+<tr>
+    <td>Post/Redirect/Get u všech formulářů měnících stav</td>
+    <td>Zabránění opakovanému odeslání</td>
+</tr>
+<tr>
+    <td>Server-side validace formulářů pomocí třídy <code>Validator</code></td>
+    <td>HTML validaci lze obejít</td>
+</tr>
+<tr>
+    <td>Validní HTML i po generování přes PHP</td>
+    <td>Ověřitelné přes W3C validátor</td>
+</tr>
+<tr>
+    <td>Žádné inline styly – veškeré CSS v externích souborech</td>
+    <td>Oddělení obsahu a vzhledu</td>
+</tr>
+<tr>
+    <td>DRY – žádné kopírování kódu, využívání partials</td>
+    <td>Udržitelnost kódu</td>
+</tr>
+<tr>
+    <td><code>declare(strict_types=1);</code> na začátku každého PHP souboru</td>
+    <td>Striktní typová kontrola</td>
+</tr>
+</table>
+
+<h2>&#x1F9F0; Validátor formulářů (implementace)</h2>
+
+<p>
+V připraveném základu najdete soubor <code>src/Validator.php</code> s kostrou třídy –
+všechny metody jsou definované, ale <strong>musíte je sami implementovat</strong>.
+Každá metoda obsahuje komentář s tipem na řešení.
+</p>
+
+<p>
+Validátor musí podporovat <strong>řetězení metod</strong> (fluent interface) – každá
+validační metoda vrací <code>$this</code>, takže je lze volat za sebou.
+Pro jedno pole se uchovává jen první chyba.
+</p>
+
+<p>Metody, které musíte implementovat:</p>
+
+<table>
+<tr><th>Metoda</th><th>Účel</th></tr>
+<tr><td><code>required($field, $value, $message)</code></td><td>Hodnota nesmí být prázdná (po oříznutí mezer)</td></tr>
+<tr><td><code>email($field, $value, $message)</code></td><td>Platný e-mail (<code>filter_var</code>)</td></tr>
+<tr><td><code>minLength($field, $value, $min, $message)</code></td><td>Minimální délka (<code>mb_strlen</code>)</td></tr>
+<tr><td><code>maxLength($field, $value, $max, $message)</code></td><td>Maximální délka</td></tr>
+<tr><td><code>pattern($field, $value, $regex, $message)</code></td><td>Musí odpovídat regulárnímu výrazu</td></tr>
+<tr><td><code>in($field, $value, $allowed, $message)</code></td><td>Musí být jedna z povolených hodnot</td></tr>
+<tr><td><code>isValid()</code></td><td>Vrátí <code>true</code> pokud nejsou žádné chyby</td></tr>
+<tr><td><code>getErrors()</code></td><td>Vrátí pole všech chyb</td></tr>
+<tr><td><code>getError($field)</code></td><td>Vrátí chybu pro konkrétní pole (nebo <code>null</code>)</td></tr>
+<tr><td><code>hasError($field)</code></td><td>Má dané pole chybu?</td></tr>
+</table>
+
+<p><strong>Příklad očekávaného použití:</strong></p>
+
+<pre><code>&lt;?php
+$email = trim($_POST['email'] ?? '');
+$name = trim($_POST['name'] ?? '');
+$zip = trim($_POST['zip'] ?? '');
+
+$v = new Validator();
+$v-&gt;required('name', $name, 'Jméno je povinné.')
+  -&gt;minLength('name', $name, 2, 'Jméno musí mít alespoň 2 znaky.')
+  -&gt;required('email', $email, 'E-mail je povinný.')
+  -&gt;email('email', $email, 'Neplatný formát e-mailu.')
+  -&gt;required('zip', $zip, 'PSČ je povinné.')
+  -&gt;pattern('zip', $zip, '/^\d{3}\s?\d{2}$/', 'PSČ musí mít 5 číslic.');
+
+if (!$v-&gt;isValid()) {
+    // Zobrazit formulář znovu s chybami
+    $errors = $v-&gt;getErrors();
+}
+?&gt;
+
+&lt;!-- V šabloně: --&gt;
+&lt;input type="email" name="email"
+       value="&lt;?= htmlspecialchars($email) ?&gt;"
+       class="&lt;?= $v-&gt;hasError('email') ? 'input--error' : '' ?&gt;"&gt;
+
+&lt;?php if ($v-&gt;hasError('email')): ?&gt;
+    &lt;span class="error"&gt;&lt;?= htmlspecialchars($v-&gt;getError('email')) ?&gt;&lt;/span&gt;
+&lt;?php endif; ?&gt;</code></pre>
+
+<div class="page-break"></div>
+
+<h2>&#x1F9E9; Komponentový přístup</h2>
+
+<p>Projekt musí využívat znovupoužitelné části (partialy) přes <code>require</code>:</p>
+
+<ul>
+    <li><strong><code>partials/header.php</code></strong> – hlavička s navigací a počtem položek v košíku</li>
+    <li><strong><code>partials/footer.php</code></strong> – patička</li>
+    <li><strong><code>partials/product-card.php</code></strong> – produktová karta (automaticky rozlišuje variantní a nevariantní produkty)</li>
+    <li>Další vlastní partialy dle potřeby (breadcrumb, vyhledávací formulář, krok objednávky...)</li>
+</ul>
+
+<h2>&#x1F4C1; Adresářová struktura projektu</h2>
+
+<div class="tree">
+/projekt-eshop<br>
+│&nbsp;&nbsp; index.php<br>
+│&nbsp;&nbsp; kategorie.php<br>
+│&nbsp;&nbsp; produkty.php<br>
+│&nbsp;&nbsp; produkt.php<br>
+│&nbsp;&nbsp; kosik.php<br>
+│&nbsp;&nbsp; objednavka-1.php<br>
+│&nbsp;&nbsp; objednavka-2.php<br>
+│&nbsp;&nbsp; objednavka-3.php<br>
+│&nbsp;&nbsp; objednavka-potvrzeni.php<br>
+│&nbsp;&nbsp; vyhledavani.php<br>
+│&nbsp;&nbsp; o-nas.php<br>
+│&nbsp;&nbsp; kontakt.php<br>
+│&nbsp;&nbsp; 404.php<br>
+│<br>
+├── /src<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; bootstrap.php<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Database.php<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Cart.php<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Validator.php<br>
+│&nbsp;&nbsp; ├── /DTO<br>
+│&nbsp;&nbsp; │&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CategoryDTO.php, ProductDTO.php, ...<br>
+│&nbsp;&nbsp; └── /Repository<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CategoryRepository.php, ProductRepository.php, ...<br>
+│<br>
+├── /partials<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; header.php<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; footer.php<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; product-card.php<br>
+│<br>
+├── /database<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; init.php<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; eshop.db<br>
+│<br>
+└── /assets<br>
+&nbsp;&nbsp;&nbsp;&nbsp; ├── /css<br>
+&nbsp;&nbsp;&nbsp;&nbsp; │&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; main.css, variables.css, base.css, ...<br>
+&nbsp;&nbsp;&nbsp;&nbsp; └── /images<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /kategorie, /produkty<br>
+</div>
+
+<div class="page-break"></div>
+
+<h2>&#x1F4DA; Dokumentace</h2>
+
+<p>Součástí odevzdání je <strong>technická zpráva ve formátu PDF</strong> (minimálně 4 strany). Zpráva musí obsahovat:</p>
+
+<ol>
+    <li>
+        <strong>Úvod</strong> – stručný popis projektu, jeho účelu a použitých technologií.
+    </li>
+    <li>
+        <strong>Struktura projektu</strong> – popis adresářové struktury, význam klíčových souborů a složek.
+    </li>
+    <li>
+        <strong>Popis implementovaných funkcí</strong> – jak funguje košík, objednávkový proces,
+        vyhledávání, varianty produktů atd. Neopisujte kód řádek po řádku – vysvětlete, jak spolu
+        části spolupracují.
+    </li>
+    <li>
+        <strong>Databázové schéma</strong> – přehled tabulek a jejich účelu. Může být formou
+        tabulky nebo diagramu.
+    </li>
+    <li>
+        <strong>Návod na spuštění</strong> – jak projekt spustit lokálně nebo v Codespaces
+        (včetně inicializace databáze).
+    </li>
+    <li>
+        <strong>Závěr</strong> – co bylo nejtěžší, co byste udělali jinak, co byste doplnili
+        kdybyste měli více času.
+    </li>
+</ol>
+
+<h2>&#x1F3A4; Prezentace</h2>
+
+<p>
+Po odevzdání každý student <strong>prezentuje svůj projekt před třídou</strong> formou
+<strong>live dema</strong> – předvedení funkčního e-shopu v prohlížeči. Není potřeba připravovat
+prezentaci (PowerPoint apod.).
+</p>
+
+<p>Prezentace by měla obsahovat:</p>
+<ul>
+    <li>Krátké představení e-shopu (téma, design)</li>
+    <li>Ukázka klíčových funkcí – procházení kategorií, detail produktu, výběr varianty, přidání do košíku, celý objednávkový proces</li>
+    <li>Co bylo nejtěžší a co byste udělali jinak</li>
+</ul>
+
+<h2>&#x1F4BB; Odevzdání v Git repozitáři</h2>
+
+<ul>
+    <li>Projekt <strong>musí být veden v Git repozitáři</strong> (GitHub, GitLab, Bitbucket).</li>
+    <li><strong>Průběžné commity jsou povinné</strong> – pravidelně commitujte každou dokončenou část práce.</li>
+    <li>Každý commit musí mít <strong>výstižný popis</strong>
+        (např. <code>Implement cart page with quantity update</code>,
+        <code>Add server-side validation to checkout step 1</code>).</li>
+    <li>Repozitář musí obsahovat všechny PHP soubory, složky <code>src</code>, <code>partials</code>,
+        <code>assets</code>, <code>database</code> a dokumentaci.</li>
+    <li>Soubor <code>eshop.db</code> se <strong>necommituje</strong> (je v <code>.gitignore</code>,
+        generuje se přes <code>init.php</code>).</li>
+    <li>Dokumentace (PDF) se odevzdá do rootu repozitáře.</li>
+</ul>
+
+<div class="page-break"></div>
+
+<h2>&#x2B50; Bonusové úkoly</h2>
+
+<p>
+Následující funkcionality <strong>nejsou povinné</strong>, ale mohou zlepšit hodnocení
+a umožňují šikovnějším studentům ukázat, co dokáží:
+</p>
+
+<ul>
+    <li><strong>Řazení produktů</strong> – podle ceny (vzestupně/sestupně), názvu, nebo novinek.
+        Implementace přes GET parametr (<code>?sort=price-asc</code>).</li>
+    <li><strong>Stránkování</strong> – výpis produktů po stránkách (např. 12 na stránku)
+        s navigací (<code>?page=2</code>).</li>
+    <li><strong>Slevový kód (kupón)</strong> – formulář v košíku pro zadání kódu, sleva se aplikuje
+        na celkovou cenu. Kupóny uložené v databázi.</li>
+    <li><strong>Oblíbené produkty (wishlist)</strong> – uložení oblíbených produktů do session,
+        samostatná stránka s jejich výpisem.</li>
+    <li><strong>Přihlášení zákazníka</strong> – registrace a přihlášení zákazníka (e-mail + heslo).
+        Uložení hesla jako hash (<code>password_hash</code> / <code>password_verify</code>).
+        Po přihlášení automatické předvyplnění dodacích údajů v objednávce.</li>
+    <li><strong>Přehled objednávek zákazníka</strong> – po přihlášení stránka s historií
+        objednávek včetně stavu a detailu.</li>
+    <li><strong>Počet produktů u kategorií</strong> – zobrazení počtu produktů na stránce kategorií
+        (např. „Běžecké vybavení (5)").</li>
+    <li><strong>Naposledy prohlížené produkty</strong> – historie posledních N prohlížených produktů
+        v session, zobrazení na hlavní stránce nebo v sidebaru.</li>
+</ul>
+
+<h2>&#x2705; Hodnocení</h2>
+
+<h3>Funkcionalita (40 %)</h3>
+<ul>
+    <li>Dynamický výpis kategorií a produktů z databáze</li>
+    <li>Detail produktu s galerií, parametry a variantami</li>
+    <li>Funkční košík (přidání, odebrání, změna množství, varianty)</li>
+    <li>Objednávkový proces – krok 1: dodací údaje s validací</li>
+    <li>Objednávkový proces – krok 2: výběr dopravy a platby z DB</li>
+    <li>Objednávkový proces – krok 3: shrnutí a odeslání</li>
+    <li>Potvrzení objednávky (uložení do DB, vyprázdnění košíku)</li>
+    <li>Funkční vyhledávání</li>
+    <li>404 stránka pro neexistující produkty/kategorie</li>
+</ul>
+
+<h3>Kvalita kódu a best practices (20 %)</h3>
+<ul>
+    <li>Funkční implementace třídy <code>Validator</code> (fluent interface, všechny metody)</li>
+    <li>DRY – využívání partials, žádné duplikování kódu</li>
+    <li>Čistý, čitelný a strukturovaný kód</li>
+    <li>Správné používání repozitářů a DTO</li>
+    <li><code>declare(strict_types=1)</code> ve všech PHP souborech</li>
+    <li>Průběžné a výstižné Git commity</li>
+</ul>
+
+<h3>Bezpečnost (15 %)</h3>
+<ul>
+    <li><code>htmlspecialchars()</code> u všech výpisů</li>
+    <li>Server-side validace formulářů pomocí <code>Validator</code></li>
+    <li>Post/Redirect/Get u formulářů</li>
+    <li>Žádný přístup k datům bez ošetření (null check, prázdný vstup)</li>
+</ul>
+
+<h3>Dokumentace a prezentace (15 %)</h3>
+<ul>
+    <li>Technická zpráva – min. 4 strany, všechny povinné sekce</li>
+    <li>Prezentace – live demo, srozumitelné vysvětlení</li>
+</ul>
+
+<h3>Validní HTML a CSS (10 %)</h3>
+<ul>
+    <li>Validní HTML (W3C validátor) i po generování přes PHP</li>
+    <li>Rozšířené CSS pro nové komponenty (košík, formuláře, 404...)</li>
+    <li>Responzivita zachována i pro nové stránky</li>
+    <li>Žádné inline styly</li>
+</ul>
+
+<hr>
+
+<p style="text-align: center; color: #64748b; margin-top: 2rem;">
+    <strong>Termín odevzdání:</strong> 31. 5. 2026<br>
+    <strong>Připravený základ:</strong> složka <code>projekt/</code> v repozitáři + <code>README.md</code> s návodem
+</p>
+
+</body>
+</html>
